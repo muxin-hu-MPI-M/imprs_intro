@@ -1,17 +1,19 @@
 # ================================================ #
-# 
+# The Earth-System Box Model (ESBM):
+# Reservoirs and Exchanges
 #
+# Author: Beatrice, Muxin
+# Date: 07/07/2026
 # ================================================ #
 
 
-# ============================= #
 # import libraries
-# ============================= #
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import xarray as xr
 import cartopy.crs as ccrs
+
 
 # ============================================ #
 # Box model for prognostic energy (i.e., Temp) 
