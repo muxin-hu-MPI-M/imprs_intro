@@ -6,7 +6,7 @@
 # Date: 07/07/2026
 # ================================================ #
 
-
+# %% 
 # import libraries
 import numpy as np
 import pandas as pd
@@ -20,9 +20,8 @@ import cartopy.crs as ccrs
 # in surface ande deep ocean
 # ============================================ #
 
-# ============================= #
+# %% 
 # Forward functions
-# ============================= #
 def euler_forward_func(dt, F_n, dF_n):
     """
     General Euler forward function,
@@ -43,9 +42,8 @@ def leapfrog_forward_func(dt, F_nm1, dF_n):
     
     return F_np1
 
-# ============================= #
+# %% 
 # Tendency functions
-# ============================= #
 # surface ocean
 def T_s_tendency(T_s_n, T_D_n, C_a_n, dS0_n, C_a_0, alpha_0, S0_change=False):
     """
@@ -121,14 +119,12 @@ def T_D_tendency(T_s_n, T_D_n):
 
     return dT_D_n
 
-
-# ============================= #
-# pre-requisites
-# ============================= #
+# %% 
+# Pre-requisites
 # time
 seconds_per_year = 365 * 24 * 60 * 60
-n_years = 100
-dt = seconds_per_year          # timestep in seconds
+n_years = 1000
+dt = seconds_per_year          # timestep: 1 year
 nt = n_years + 1               # include year 0
 time = np.arange(nt)  
 
@@ -138,7 +134,7 @@ alpha_0 = 0.30                 # pre-industrial albedo
 
 # prescribed forcings
 dS0_values = np.zeros(nt)
-C_a_values = 2 * C_a_0 * np.ones(nt)
+C_a_values = 1.5 * C_a_0 * np.ones(nt)
 # print(C_a_values)
 
 # data array
@@ -155,15 +151,12 @@ ds["T_D"].attrs["units"] = "K"
 ds["C_a"].attrs["units"] = "ppm"
 ds["dS0"].attrs["units"] = "W m-2"
 
-
-# ============================= #
+# %% 
 # time loop
-# ============================= #
 # initial condition
 ds["T_s"][0] = 0.0
 ds["T_D"][0] = 0.0
 
-# loop over timestep: Leapfrog
 for n in range(0, nt-1):
     # tendency at t=n (current)
     dT_s_n = T_s_tendency(
@@ -190,15 +183,14 @@ for n in range(0, nt-1):
         F_n = ds["T_D"][n], 
         dF_n = dT_D_n)
     
-
-# ============================= #
-# time loop
-# ============================= #
+# %% 
+# Plot
 ds["T_s"].plot(label="surface ocean")
 ds["T_D"].plot(label="deep ocean")
 plt.xlabel("Time [years]")
 plt.ylabel("Temperature anomaly [K]")
 # plt.ylim([-10, 10])
-plt.xlim([0,100])
+plt.xlim([0,25])
 plt.legend()
 plt.show()
+# %%
